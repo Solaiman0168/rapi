@@ -18,4 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::ApiResource('/');
+Route::get('/class', 'App\Http\Controllers\Api\SclassController@index');
+// Route::ApiResource('/class', 'App\Http\Controllers\Api\SclassController@index');
+Route::post('/post/class', 'App\Http\Controllers\Api\SclassController@store');
+Route::delete('delete/class/{id}', 'App\Http\Controllers\Api\SclassController@destroy');

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use DB;
+use Validator;
 
 class SclassController extends Controller
 {
@@ -14,8 +16,10 @@ class SclassController extends Controller
      */
     public function index()
     {
-        $sclass = DB::table('sclasses');
+        $sclass = DB::table('sclasses')->get();
+        // dd($sclass);
         return response()->json($sclass);
+        // return $sclass->toArray();
     }
 
 
@@ -27,7 +31,25 @@ class SclassController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //return response()->json($request->all());
+        // $validatedData = $request->validate([
+        //     'class_name' => ['required|unique:sclasses,class_name|max:255'],
+        // ]);
+        $validator = Validator::make($request->all(),[
+            'class_name' => 'required|unique:sclasses,class_name|max:25',
+            
+        ]);
+        if ($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()->toArray()
+            ]);
+       }
+
+        $data = array();
+        $data['class_name'] = $request->class_name;
+        $insert = DB::table('sclasses')->insert($data);
+        return response('Data Inserted Successfully');
     }
 
     /**
@@ -72,6 +94,7 @@ class SclassController extends Controller
      */
     public function destroy($id)
     {
-        //
+       $sclass = DB::table('sclasses')->where('id', $id)->delete();
+        return $sclass->response('Data Deleted Successfully');
     }
 }
