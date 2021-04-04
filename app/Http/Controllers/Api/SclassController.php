@@ -37,14 +37,13 @@ class SclassController extends Controller
         // ]);
         $validator = Validator::make($request->all(),[
             'class_name' => 'required|unique:sclasses,class_name|max:25',
-            
         ]);
         if ($validator->fails()){
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors()->toArray()
             ]);
-       }
+        }
 
         $data = array();
         $data['class_name'] = $request->class_name;
@@ -60,7 +59,13 @@ class SclassController extends Controller
      */
     public function show($id)
     {
-        //
+        $showData = DB::table('sclasses')->where('id', $id)->first();
+        if(!isset($showData)){
+            return response('Data Not Exist!');
+        }else{
+            return response()->json($showData);
+        }
+        
     }
 
     /**
@@ -83,7 +88,20 @@ class SclassController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'class_name' => 'required|unique:sclasses,class_name|max:25',
+        ]);
+        if ($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()->toArray()
+            ]);
+       }
+
+        $data = array();
+        $data['class_name'] = $request->class_name;
+        $update = DB::table('sclasses')->where('id', $id)->update($data);
+        return response('Data Updated Successfully');
     }
 
     /**
@@ -92,9 +110,12 @@ class SclassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function destroy($id)
     {
        $sclass = DB::table('sclasses')->where('id', $id)->delete();
-        return $sclass->response('Data Deleted Successfully');
+       return $sclass->response('Data Deleted Successfully');
     }
+
+
 }

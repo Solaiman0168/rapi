@@ -19,6 +19,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/class', 'App\Http\Controllers\Api\SclassController@index');
+Route::get('show/class/{id}', 'App\Http\Controllers\Api\SclassController@show');
 // Route::ApiResource('/class', 'App\Http\Controllers\Api\SclassController@index');
 Route::post('/post/class', 'App\Http\Controllers\Api\SclassController@store');
 Route::delete('delete/class/{id}', 'App\Http\Controllers\Api\SclassController@destroy');
+Route::patch('update/class/{id}', 'App\Http\Controllers\Api\SclassController@update');
+
+
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found.']);
+});
